@@ -18,28 +18,28 @@ close all
 % A(:, 4) = [0;0;0;1;1];
 %% Beispiel aus https://optimization.cbe.cornell.edu/index.php?title=Set_covering_problem
 
-% A = zeros(15, 8);
-% 
-% A(:, 1) = [1;0;1;1;0;1;1;0;0;0;0;0;0;0;0];
-% A(:, 2) = [0;0;0;1;0;0;1;1;0;0;0;1;0;0;0];
-% A(:, 3) = [0;1;0;0;1;0;0;0;1;0;1;0;1;0;0];
-% A(:, 4) = [1;1;0;0;0;0;0;0;0;0;0;0;0;1;1];
-% A(:, 5) = [0;0;1;0;0;1;0;0;0;1;0;1;0;1;0];
-% A(:, 6) = [0;0;0;0;0;0;0;1;0;0;0;0;0;1;1];
-% A(:, 7) = [1;1;0;0;0;1;0;0;0;0;1;0;0;0;0];
-% A(:, 8) = [1;1;0;1;0;1;0;1;0;0;0;1;0;0;0];
+A = zeros(15, 8);
+
+A(:, 1) = [1;0;1;1;0;1;1;0;0;0;0;0;0;0;0];
+A(:, 2) = [0;0;0;1;0;0;1;1;0;0;0;1;0;0;0];
+A(:, 3) = [0;1;0;0;1;0;0;0;1;0;1;0;1;0;0];
+A(:, 4) = [1;1;0;0;0;0;0;0;0;0;0;0;0;1;1];
+A(:, 5) = [0;0;1;0;0;1;0;0;0;1;0;1;0;1;0];
+A(:, 6) = [0;0;0;0;0;0;0;1;0;0;0;0;0;1;1];
+A(:, 7) = [1;1;0;0;0;1;0;0;0;0;1;0;0;0;0];
+A(:, 8) = [1;1;0;1;0;1;0;1;0;0;0;1;0;0;0];
 
 %%
-% % Definition of weights for weighted SCP
-% weights = zeros(size(A,2), 1);
-% for i = 1:length(weights)
-%     weights(i) = 1;%sum(A(:,i)); % Cardinality of a set is its weight
-% end
+% Definition of weights for weighted SCP
+weights = zeros(size(A,2), 1);
+for i = 1:length(weights)
+    weights(i) = 1;%sum(A(:,i)); % Cardinality of a set is its weight
+end
 
 %%
 
-[A, weights] = import_scp_data();
-weights = weights';
+% [A, weights] = import_scp_data();
+% weights = weights';
 
 %% Firefly Algorithm
 
@@ -67,9 +67,9 @@ while gen_no < max_gen
     % Fitness for each firefly
     fit = firefly_fitness(fireflies, weights);
     
-    %[~, best_index] = min(fit);
+    [~, best_index] = min(fit);
     % Choose best firefly randomly from all fireflies with min fit
-    best_index = randsample(find(fit==min(fit)), 1);
+    %best_index = randsample(find(fit==min(fit)), 1);
     
     
     % Modification of firefly position

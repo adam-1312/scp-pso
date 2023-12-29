@@ -1,0 +1,51 @@
+function [A, cost_per_col] = import_scp_data(dataset_name)
+    
+    % Get dataset path
+    PATH_PRE = "../scp-data/";
+    PATH_POST = ".txt";
+    data_path = strcat(PATH_PRE, dataset_name, PATH_POST);
+
+    % Transform txt data to matrix
+    data = readmatrix(data_path, "Delimiter", [" ", " \n "]);
+    
+    % Get rid of negligible elements at start and end
+    data(1) = [];
+    data(end) = [];
+
+    % Extract scp size
+    rows_no = data(1);
+    cols_no = data(2);
+    
+    % Extract costs
+    cost_per_col = data(3:3+cols_no-1);
+
+    % Initialize scp incidence matrix
+    A = zeros(rows_no, cols_no);
+
+    % Initialize indices used in extraction
+    i_start = 3+cols_no+1;
+    current_row = 1;
+    till_new_row = data(i_start - 1);
+
+    % extract incidence matrix values
+    for i = 3+cols_no+1:length(data)
+
+        if till_new_row ~= 0 % new row not reached?
+           till_new_row = till_new_row - 1;
+
+           % place current_row in current col seen in data 
+           A(current_row, data(i)) = 1;
+
+        else
+           % go to next row
+           current_row = current_row + 1;
+
+           % extract number of cols with 1 in that row
+           till_new_row = data(i);
+        end
+
+    end
+
+    writematrix("../scp-data/scp44_converted.txt")
+
+end
