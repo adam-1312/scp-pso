@@ -104,10 +104,8 @@ while gen_no < max_gen
     gen_no = gen_no + 1;
     %fit(best_index);
 end
-
-gen = gen_no;
-sol = fireflies(:,best_index);
-fit = fit(best_index);
+sol = fireflies(:,best_index)
+fit(best_index)
 
 end
 

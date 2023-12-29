@@ -11,6 +11,7 @@ function [A, cost_per_col] = import_scp_data(dataset_name)
     output_path_matrix = strcat(PATH_PRE, output_name_matrix, PATH_POST);
     output_path_costs = strcat(PATH_PRE, output_name_costs, PATH_POST);
 
+    % Check if the dataset was converted before
     if isfile(output_path_matrix) && isfile(output_path_costs)
 
         A = readmatrix(output_path_matrix);
@@ -60,6 +61,7 @@ function [A, cost_per_col] = import_scp_data(dataset_name)
             end
     
         end
+        cost_per_col = cost_per_col';
     
         % Write to output paths
         writematrix(A, output_path_matrix);
