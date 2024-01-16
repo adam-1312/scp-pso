@@ -1,4 +1,4 @@
-function sol = gen_solution(A, c, size_r_c)
+function sol = abc_gen_solution(A, c, size_r_c)
     % Assumption: Passed A is ordered in ascending order of cost
     %             and if cost of two columns are equal then most
     %             amount of rows covered comes first
@@ -13,6 +13,9 @@ function sol = gen_solution(A, c, size_r_c)
     % A(:, 6) = [0;0;0;0;0;0;0;1;0;0;0;0;0;1;1];
     % A(:, 7) = [1;1;0;0;0;1;0;0;0;0;1;0;0;0;0];
     % A(:, 8) = [1;1;0;1;0;1;0;1;0;0;0;1;0;0;0];
+    % 
+    % sort_scp(A, c);
+    % size_r_c = 3;
 
     % % Sort col indices according to cost
     % [~,sorted_indices] = sort(c);
@@ -46,7 +49,7 @@ function sol = gen_solution(A, c, size_r_c)
     no_cols = size(A, 2);
 
     sol = zeros(no_cols, 1);
-    u = zeros(no_rows, 1);
+    %u = zeros(no_rows, 1);
 
     for i = 1:no_rows
 
@@ -54,7 +57,7 @@ function sol = gen_solution(A, c, size_r_c)
         cols_in_row = find(A(i, :));
         if size_r_c < length(cols_in_row)
             cols_in_row = cols_in_row(1:size_r_c);
-        end
+        end        
         if length(cols_in_row) == 1
             j = cols_in_row;
         else
@@ -63,45 +66,36 @@ function sol = gen_solution(A, c, size_r_c)
 
         % Add column to solution
         sol(j) = 1;
-
-        for k = find(A(:, j) == 1)'
-            u(k) = u(k) + 1;
-        end
+        %u(A(:,j)==1) = u(A(:,j)==1) + 1;
     end
 
     % Remove some redundant columns
     t = sum(sol);
     while t > 0
         % Select random column from first t cols in sol
-        cols_in_sol = find(sol == 1);
+        cols_in_sol = find(sol);
         if t < length(cols_in_sol)
             cols_in_sol = cols_in_sol(1:t);
         end
-
         if length(cols_in_sol) == 1
-            j = cols_in_row;
+            j = cols_in_sol;
         else
-            j = randsample(cols_in_row, 1);
+            j = randsample(cols_in_sol, 1);
         end
 
         % Check if column could be reduced
-        reducible = 1;
-        for k = find(A(:, j) == 1)'
-            if (u(k) < 2)
-                reducible = 0;
-                break
-            end
-        end
+        u = A*sol;
+        filtered_u = u(A(:,j)==1);
+        reducible = length(filtered_u(filtered_u>=2)) == length(filtered_u);
+
         if reducible
             % Remove column from solution
             sol(j) = 0;
-            for k = find(A(:, j) == 1)'
-                u(k) = u(k) - 1;
-            end
+            %u(A(:,j)==1) = u(A(:,j)==1) - 1;
         end
 
         t = t - 1;
     end
 
-    A*sol;
+    %A*sol
 end
