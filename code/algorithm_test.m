@@ -2,8 +2,8 @@ clear
 
 %% INPUT
 
-algorithm = @firefly;
-data_names = {'scpe1', 'scpe2', 'scpe3'};
+algorithm = @abc;
+data_names = {'scpe1'};%, 'scpe2', 'scpe3'};
 runs_per_dataset = 5;
 
 %% SCRIPT

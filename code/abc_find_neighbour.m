@@ -5,11 +5,16 @@ function new_food = abc_find_neighbour(A, c, food, i, col_add, col_drop, p_a, si
     
     new_food = food;
     no_of_srcs = size(food, 2);
+    %no_of_cols = size(food, 1);
     
     % Randomly select food source j different from i
     j = i;
     while j == i
-        j = randsample(1:no_of_srcs, 1);
+       % if size(unique(food', 'rows'), 1) == 1
+       %     error('Stuck in infinite loop, because population not diverse at all')
+       % else
+            j = randsample(1:no_of_srcs, 1);
+       % end
     end
 
     food_i = food(:, i);
@@ -63,6 +68,35 @@ function new_food = abc_find_neighbour(A, c, food, i, col_add, col_drop, p_a, si
 
             u = A*new_food(:, i);
         end
+
+        % Remove redundant columns
+       ratio = c ./ sum(A)';
+        [~, cols_to_reduce] = sort(ratio, 'descend');
+        while any(cols_to_reduce ~= 0)
+            for k = 1:length(cols_to_reduce)
+                j = cols_to_reduce(k);
+                if j == 0
+                    continue
+                end
+                % Check if column j could be reduced
+                u = A*new_food(:,i);
+                filtered_u = u(A(:,j)==1);
+                reducible = length(filtered_u(filtered_u>=2)) == length(filtered_u);
+                if reducible && new_food(j, i) == 1
+                    % Remove column from solution
+                    new_food(j, i) = 0;
+                    break
+                else
+                    cols_to_reduce(k) = 0;
+                end
+            end
+        end
+    
+        % Apply local search
+        new_food(:, i) = abc_local_search(new_food(:, i), A, c);
+        
+        new_food = new_food(:, i);
+
     end
 
 

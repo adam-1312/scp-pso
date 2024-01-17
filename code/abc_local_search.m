@@ -30,11 +30,11 @@ function new_food = abc_local_search(food, A, c)
                 improve = 1;
             elseif cardinality == 1
 
-                % Assumes A's columns ordered sascendingly by cost
+                % Assumes A's columns ordered ascendingly by cost
                 least_cost_col_indx = find(A(P_j==1,:),1); % least cost col covering row i
                 least_cost_col = A(:,least_cost_col_indx);
                 
-                if ALL(col_j ~= least_cost_col)
+                if all(col_j ~= least_cost_col)
                     % Replace col j with least cost
                     new_food(j) = 0;
                     new_food(least_cost_col_indx) = 1;
@@ -43,7 +43,7 @@ function new_food = abc_local_search(food, A, c)
                     improve = 1;
                 end
 
-            elseif cardinality == 2
+            else
 
                 i = find(P_j);
                 least_cost_col_indx = zeros(1,length(i));
@@ -55,25 +55,68 @@ function new_food = abc_local_search(food, A, c)
 
                 least_cost_col = A(:, least_cost_col_indx);
 
-                if all(least_cost_col(:,1) ~= least_cost_col(:,2)) && sum(c(least_cost_col_indx)) < c(j)
-                    % Replace col j with both least cost columns
-                    new_food(j) = 0;
-                    new_food(least_cost_col_indx) = 1;
-                    improve = 1;
-                elseif all(least_cost_col(:,1) == least_cost_col(:,2)) && all(least_cost_col(:,2) ~= col_j)
-                    % Replace col j with one of the least cost cols
-                    new_food(j) = 0;
-                    new_food(least_cost_col_indx(1)) = 1;
-                    improve = 1;
+                if cardinality == 2
+                    if all(least_cost_col(:,1) ~= least_cost_col(:,2)) && sum(c(least_cost_col_indx)) < c(j)
+                        % Replace col j with both least cost columns
+                        new_food(j) = 0;
+                        new_food(least_cost_col_indx) = 1;
+                        improve = 1;
+                    elseif all(least_cost_col(:,1) == least_cost_col(:,2)) && all(least_cost_col(:,2) ~= col_j)
+                        % Replace col j with one of the least cost cols
+                        new_food(j) = 0;
+                        new_food(least_cost_col_indx(1)) = 1;
+                        improve = 1;
+                    end
+                elseif cardinality == 3
+                    if all(least_cost_col(:,1) ~= least_cost_col(:,2)) &&...
+                       all(least_cost_col(:,1) ~= least_cost_col(:,3)) &&...
+                       all(least_cost_col(:,2) ~= least_cost_col(:,3)) &&...
+                       sum(c(least_cost_col_indx)) < c(j)
+
+                        % Replace col j with the 3 least cost columns
+                        new_food(j) = 0;
+                        new_food(least_cost_col_indx) = 1;
+                        improve = 1;
+
+                    elseif all(least_cost_col(:,1) == least_cost_col(:,2)) &&...
+                           all(least_cost_col(:,2) == least_cost_col(:,3)) &&...
+                           all(least_cost_col(:,3) ~= col_j)
+
+                        % Replace col j with the one least cost column
+                        new_food(j) = 0;
+                        new_food(least_cost_col_indx(1)) = 1;
+                        improve = 1;
+                    
+                    elseif all(least_cost_col(:,1) == least_cost_col(:,2)) &&...
+                           all(least_cost_col(:,1) ~= least_cost_col(:,3)) &&...
+                           sum(c(least_cost_col_indx([1 3]))) < c(j)
+                        
+                        % Replace col j with the least cost columns 1 and 3
+                        new_food(j) = 0;
+                        new_food(least_cost_col_indx([1 3])) = 1;
+                        improve = 1;
+
+                    elseif all(least_cost_col(:,1) == least_cost_col(:,3)) &&...
+                           all(least_cost_col(:,1) ~= least_cost_col(:,2)) &&...
+                           sum(c(least_cost_col_indx([1 2]))) < c(j)
+                        
+                        % Replace col j with the least cost columns 1 and 2
+                        new_food(j) = 0;
+                        new_food(least_cost_col_indx([1 2])) = 1;
+                        improve = 1;
+
+                    elseif all(least_cost_col(:,2) == least_cost_col(:,3)) &&...
+                           all(least_cost_col(:,1) ~= least_cost_col(:,2)) &&...
+                           sum(c(least_cost_col_indx([1 2]))) < c(j)
+                    
+                        % Replace col j with the least cost columns 1 and 2
+                        new_food(j) = 0;
+                        new_food(least_cost_col_indx([1 2])) = 1;
+                        improve = 1;
+
+                    end
                 end
-
-            elseif cardinality == 3
-                %% TODO
             end
-
-
         end
-
     end
-
 end
