@@ -38,9 +38,9 @@ function [sol, fit, gen] = firefly(A, c)
 %% Firefly Algorithm
 
 %%%%% Parameters %%%%%
-attr_0 = 1; % Attractiveness at distance = 0
-light_abs = 1; % Light Absorption coefficient
-pop_size = 15; % Number of fireflies
+attr_0 = 7; % Attractiveness at distance = 0
+light_abs = 3; % Light Absorption coefficient
+pop_size = 100; % Number of fireflies
 max_gen = 1000; % Maximum number of generations
 
 %%%%% Quick Functions %%%%%
@@ -102,7 +102,7 @@ while gen_no < max_gen
         end
     end
     gen_no = gen_no + 1;
-    %fit(best_index);
+    %fit(best_index)
 end
 
 gen = gen_no;

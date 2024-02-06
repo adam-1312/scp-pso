@@ -36,7 +36,10 @@ function new_food = abc_find_neighbour(A, c, food, i, col_add, col_drop, p_a, si
         new_food(cols_to_add, i) = 1;
 
         % Drop columns
-        cols_to_drop = randsample(find(new_food(:,i)), col_drop, false);
+        cols_to_drop = zeros(col_drop, 1);
+        for k = 1:col_drop
+            cols_to_drop(k) = randsample(find(new_food(:,i)), 1);
+        end
         new_food(cols_to_drop, i) = 0;
 
         u = A*new_food(:, i);
@@ -70,7 +73,10 @@ function new_food = abc_find_neighbour(A, c, food, i, col_add, col_drop, p_a, si
         end
 
         % Remove redundant columns
-       ratio = c ./ sum(A)';
+
+        u = A*new_food(:,i); % Initialize u outside loop for performance
+
+        ratio = c ./ sum(A)';
         [~, cols_to_reduce] = sort(ratio, 'descend');
         while any(cols_to_reduce ~= 0)
             for k = 1:length(cols_to_reduce)
@@ -79,12 +85,13 @@ function new_food = abc_find_neighbour(A, c, food, i, col_add, col_drop, p_a, si
                     continue
                 end
                 % Check if column j could be reduced
-                u = A*new_food(:,i);
                 filtered_u = u(A(:,j)==1);
                 reducible = length(filtered_u(filtered_u>=2)) == length(filtered_u);
                 if reducible && new_food(j, i) == 1
                     % Remove column from solution
                     new_food(j, i) = 0;
+                    % Update u without matrix mult. for performance
+                    u(A(:,j) == 1) = u(A(:,j) == 1) - 1;
                     break
                 else
                     cols_to_reduce(k) = 0;
@@ -93,7 +100,7 @@ function new_food = abc_find_neighbour(A, c, food, i, col_add, col_drop, p_a, si
         end
     
         % Apply local search
-        new_food(:, i) = abc_local_search(new_food(:, i), A, c);
+        %new_food(:, i) = abc_local_search(new_food(:, i), A, c);
         
         new_food = new_food(:, i);
 

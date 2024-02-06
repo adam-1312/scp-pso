@@ -13,15 +13,15 @@ function [sol, best_fit, gen] = abc(A, c)
     % c = ones(size(A, 2), 1);
     
 
-    no_rows = size(A, 1);
+    %no_rows = size(A, 1);
     no_cols = size(A, 2);
 
     % Sort scp problem
     [A, c] = sort_scp(A, c);
 
     %% Parameters
-    MAX_ITER = 1000;
-    POP_SIZE = 20;
+    MAX_ITER = 500;
+    POP_SIZE = 200;
     EMPLOYED_RATE = 0.25;
     EMPLOYED_SIZE = EMPLOYED_RATE*POP_SIZE;
     ONLOOKERS_SIZE = POP_SIZE - EMPLOYED_SIZE;
@@ -46,8 +46,9 @@ function [sol, best_fit, gen] = abc(A, c)
 
     iterations = 0;
     while iterations < MAX_ITER
-    iterations = iterations + 1
-    max(fit(1,:))
+    %iterations
+    %min(fit(1,:))
+
     food_change = zeros(1, EMPLOYED_SIZE);
 
     % Handle Limit
@@ -62,7 +63,6 @@ function [sol, best_fit, gen] = abc(A, c)
     %% Employed bees look for better new food source in neighbourhood
     for i = 1:EMPLOYED_SIZE
         new_food = abc_find_neighbour(A, c, food, i, col_add, col_drop, p_a, SIZE_R_C);
-        new_food_fit = abc_fitness(new_food, A, c);
         
         if new_food == -1 % Handle collision
             % Employed bee abandons old food source and becomes scout
@@ -73,7 +73,7 @@ function [sol, best_fit, gen] = abc(A, c)
 
             new_fit = abc_fitness(new_food, A, c);
 
-            if new_fit(1) > fit(1, i) ||... 
+            if new_fit(1) < fit(1, i) ||... 
                new_fit(1) == fit(1, i) && new_fit(2) < fit(2, i)
                 
                 % Replace food source with new one
@@ -165,10 +165,18 @@ function [sol, best_fit, gen] = abc(A, c)
     unchanged_food_indx = find(~food_change);
     food_limits(unchanged_food_indx) = food_limits(unchanged_food_indx) - 1;
 
+    iterations = iterations + 1;
+
     end
 
-    [best_fit, sol_index] = abc_fitness(food, A, c);
+    [best_fit, sol_index] = min(fit(1,:));
+    sol_candidates = find(fit == best_fit);
+    if length(sol_candidates) > 1
+        [~, sol_index] = min(fit(2, :));     
+    end
     sol = food(sol_index);
+    gen = MAX_ITER;
+    
 
 end
 

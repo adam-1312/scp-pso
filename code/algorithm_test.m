@@ -3,8 +3,9 @@ clear
 %% INPUT
 
 algorithm = @abc;
-data_names = {'scpe1'};%, 'scpe2', 'scpe3'};
-runs_per_dataset = 5;
+data_names = {'scpe1', 'scpe2', 'scpe3', 'scpe4', 'scpe5'};
+%data_names = {'scpe2'};
+runs_per_dataset = 3;
 
 %% SCRIPT
 
@@ -25,6 +26,8 @@ for data_index = 1:no_datasets
     fit_for_avg = zeros(runs_per_dataset, 1);
 
     for run = 1:runs_per_dataset
+
+    disp(strcat('Solving the SCP instance',{' '},dataset, ': run',{' '}, num2str(run), ' out of',{' '}, num2str(runs_per_dataset)))
 
     tic
     [sol, fit, gen] = algorithm(A,c);
