@@ -3,9 +3,9 @@ clear
 %% INPUT
 
 algorithm = @abc;
-data_names = {'scpe1', 'scpe2', 'scpe3', 'scpe4', 'scpe5'};
-%data_names = {'scpe2'};
-runs_per_dataset = 3;
+%data_names = {'scp51', 'scp52', 'scp53'};
+data_names = {'scpe2'};
+runs_per_dataset = 1;
 
 %% SCRIPT
 
@@ -39,10 +39,6 @@ for data_index = 1:no_datasets
 
     times(data_index) = mean(times_for_avg);
     fitnesses(data_index) = mean(fit_for_avg);
-
-    
-    % mkdir('../OUTPUT')
-    % save(strcat('../OUTPUT/',dataset,'-OUTPUT.mat'), 'time_taken', 'fit', 'sol', 'gen')
 
 end
 

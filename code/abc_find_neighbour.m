@@ -1,4 +1,4 @@
-function new_food = abc_find_neighbour(A, c, food, i, col_add, col_drop, p_a, size_r_c)
+function new_food = abc_find_neighbour(A, c, food, i, col_add, col_drop, ~, size_r_c)
     % This function determines a new food source in the neighbourhood
     % of a food source with column index i in the 'food' matrix that
     % includes all food sources associated with employed bees
@@ -10,11 +10,7 @@ function new_food = abc_find_neighbour(A, c, food, i, col_add, col_drop, p_a, si
     % Randomly select food source j different from i
     j = i;
     while j == i
-       % if size(unique(food', 'rows'), 1) == 1
-       %     error('Stuck in infinite loop, because population not diverse at all')
-       % else
-            j = randsample(1:no_of_srcs, 1);
-       % end
+        j = randsample(1:no_of_srcs, 1);
     end
 
     food_i = food(:, i);
@@ -99,7 +95,7 @@ function new_food = abc_find_neighbour(A, c, food, i, col_add, col_drop, p_a, si
             end
         end
     
-        % Apply local search
+        % Apply local search (Disabled)
         %new_food(:, i) = abc_local_search(new_food(:, i), A, c);
         
         new_food = new_food(:, i);

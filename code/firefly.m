@@ -1,40 +1,5 @@
 function [sol, fit, gen] = firefly(A, c)
 
-%% Beispiel aus wikipedia englisch
-
-% A = zeros(5, 4); % 5 elements in universe, 4 subsets
-% 
-% % Definition subset 1: {1,2,3}
-% A(:, 1) = [1;1;1;0;0];
-% 
-% % Definition subset 2: {2,4}
-% A(:, 2) = [0;1;0;1;0];
-% 
-% % Definition subset 3: {3,4}
-% A(:, 3) = [0;0;1;1;0];
-% 
-% % Definition subset 4: {4,5}
-% A(:, 4) = [0;0;0;1;1];
-%% Beispiel aus https://optimization.cbe.cornell.edu/index.php?title=Set_covering_problem
-
-% A = zeros(15, 8);
-% 
-% A(:, 1) = [1;0;1;1;0;1;1;0;0;0;0;0;0;0;0];
-% A(:, 2) = [0;0;0;1;0;0;1;1;0;0;0;1;0;0;0];
-% A(:, 3) = [0;1;0;0;1;0;0;0;1;0;1;0;1;0;0];
-% A(:, 4) = [1;1;0;0;0;0;0;0;0;0;0;0;0;1;1];
-% A(:, 5) = [0;0;1;0;0;1;0;0;0;1;0;1;0;1;0];
-% A(:, 6) = [0;0;0;0;0;0;0;1;0;0;0;0;0;1;1];
-% A(:, 7) = [1;1;0;0;0;1;0;0;0;0;1;0;0;0;0];
-% A(:, 8) = [1;1;0;1;0;1;0;1;0;0;0;1;0;0;0];
-
-%%
-% Definition of weights for weighted SCP
-% weights = zeros(size(A,2), 1);
-% for i = 1:length(weights)
-%     weights(i) = 1;%sum(A(:,i)); % Cardinality of a set is its weight
-% end
-
 %% Firefly Algorithm
 
 %%%%% Parameters %%%%%
